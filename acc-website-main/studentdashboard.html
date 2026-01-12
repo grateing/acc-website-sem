@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACC Student Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Open Sans, sans-serif;
+        }
+        body {
+            color: #797979;
+            background: #f1f2f7;
+            margin: 0;
+            font-size: 13px;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: #1a1a2e;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .panel {
+            background: #16213e;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .profile-nav .user-heading {
+            background: #0f3460;
+        }
+
+        body.dark-mode .profile-nav ul > li {
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        body.dark-mode .profile-nav ul > li > a {
+            color: #b0b0b0;
+            border-left: 5px solid #16213e;
+        }
+
+        body.dark-mode .profile-nav ul > li > a:hover,
+        body.dark-mode .profile-nav ul > li.active a {
+            background: #0f3460;
+            border-left: 5px solid #ffd700;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .bio-graph-heading {
+            background: #0f3460;
+        }
+
+        body.dark-mode .bio-graph-info {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .bio-graph-info h1 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .progress-circle {
+            background: #2a2a3e;
+        }
+
+        body.dark-mode .bio-desk p {
+            color: #b0b0b0;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #08345c;
+            height: 70px;
+        }
+        
+        body.dark-mode .header {
+            background-color: #0f3460;
+        }
+
+        .logo {
+            height: 50px;
+            margin-left: 20px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+        .nav-links a {
+            color: #fff;
+            margin: 0 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1em;
+            padding: 0 5px;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .logout-btn {
+            background-color: #ffd700;
+            color: #08345c;
+            padding: 5px 50px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+            color: #fff;
+        }
+        #settings-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            margin: 0 5px;
+        }
+        #settings-btn img {
+            width: 30px;
+            height: 24px;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .menu-icon span {
+            height: 4px;
+            width: 25px;
+            background: #fff;
+            margin: 2px 0;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .settings-panel {
+            background: #16213e;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+        }
+
+        .settings-panel.open {
+            right: 0;
+        }
+
+        .settings-header {
+            background: #08345c;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.dark-mode .settings-header {
+            background: #0f3460;
+        }
+
+        .settings-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-settings {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-settings:hover {
+            opacity: 0.7;
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .setting-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.dark-mode .setting-item {
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        body.dark-mode .setting-label {
+            color: #e0e0e0;
+        }
+
+        .setting-description {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        body.dark-mode .setting-description {
+            color: #999;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #08345c;
+        }
+
+        body.dark-mode input:checked + .toggle-slider {
+            background-color: #ffd700;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 700px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                right: 10px;
+                background: #08345c;
+                flex-direction: column;
+                width: 150px;
+                border-radius: 5px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                z-index: 100;
+            }
+            
+            body.dark-mode .nav-links {
+                background: #0f3460;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+            .menu-icon {
+                display: flex;
+            }
+            .header-actions {
+                margin-right: 5px;
+            }
+            
+            .settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        /* Container adjustment */
+        .container {
+            padding: 20px;
+        }
+
+        .profile-nav, .profile-info {
+            margin-top: 30px;
+        }
+
+        .panel {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-nav .user-heading {
+            background: #08345c;
+            color: #fff;
+            border-radius: 4px 4px 0 0;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .profile-nav .user-heading.round a {
+            border-radius: 50%;
+            border: 10px solid rgba(255,255,255,0.3);
+            display: inline-block;
+        }
+
+        .profile-nav .user-heading a img {
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+        }
+
+        .profile-nav .user-heading h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        .profile-nav .user-heading p {
+            font-size: 12px;
+            color: #bdbdbd;
+        }
+
+        .profile-nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .profile-nav ul > li {
+            border-bottom: 1px solid #ebeae6;
+            line-height: 30px;
+        }
+
+        .profile-nav ul > li:last-child {
+            border-bottom: none;
+        }
+
+        .profile-nav ul > li > a {
+            display: block;
+            padding: 15px;
+            color: #89817f;
+            border-left: 5px solid #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .profile-nav ul > li > a:hover,
+        .profile-nav ul > li.active a {
+            background: #f8f7f5;
+            border-left: 5px solid #08345c;
+            color: #89817f;
+        }
+
+        body.dark-mode .profile-nav ul > li > a:hover,
+        body.dark-mode .profile-nav ul > li.active a {
+            background: #0f3460;
+            border-left: 5px solid #ffd700;
+        }
+
+        .profile-nav ul > li > a > i {
+            font-size: 16px;
+            padding-right: 10px;
+            color: #bcb3aa;
+        }
+
+        .label-warning {
+            background-color: #08345c;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        body.dark-mode .label-warning {
+            background-color: #ffd700;
+            color: #1a1a2e;
+        }
+
+        .pull-right {
+            float: right;
+        }
+
+        .p-text-area {
+            width: 100%;
+            border: none;
+            font-weight: 300;
+            color: #797979;
+            font-size: 16px;
+            padding: 15px;
+            resize: none;
+        }
+
+        .p-text-area:focus {
+            outline: none;
+        }
+
+        .panel-footer {
+            background-color: #f8f7f5;
+            border-top: 1px solid #e7ebee;
+            padding: 15px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .panel-footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .panel-footer ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .panel-footer ul li a {
+            color: #7a7a7a;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .btn-warning {
+            background-color: #08345c;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-warning:hover {
+            background-color: #08345c;
+        }
+
+        .bio-graph-heading {
+            background: #08345c;
+            color: #fff;
+            text-align: center;
+            font-style: italic;
+            padding: 40px 20px;
+            border-radius: 4px 4px 0 0;
+            font-size: 16px;
+            font-weight: 550;
+        }
+
+        .panel-body {
+            padding: 30px;
+        }
+
+        .bio-graph-info {
+            color: #89817e;
+        }
+
+        .bio-graph-info h1 {
+            font-size: 22px;
+            font-weight: 300;
+            margin: 0 0 20px;
+        }
+
+        .bio-row {
+            width: 50%;
+            float: left;
+            margin-bottom: 10px;
+            padding: 0 15px;
+        }
+
+        .bio-row p {
+            margin: 5px 0;
+        }
+
+        .bio-row p span {
+            width: 100px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .bio-chart {
+            width: 30%;
+            float: left;
+            text-align: center;
+        }
+
+        .bio-desk {
+            width: 70%;
+            float: left;
+            padding-left: 20px;
+        }
+
+        .bio-desk h4 {
+            font-size: 15px;
+            font-weight: 400;
+            margin: 0 0 5px 0;
+        }
+
+        .bio-desk h4.terques { color: #4CC5CD; font-weight:600}
+        .bio-desk h4.red { color: #e26b7f; font-weight:600}
+        .bio-desk h4.green { color: #97be4b; font-weight:600}
+        .bio-desk h4.purple { color: #caa3da; font-weight:600}
+
+        .bio-desk p {
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .progress-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e8e8e8;
+            position: relative;
+            display: inline-block;
+        }
+
+        .progress-circle::before {
+            content: attr(data-progress) '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .progress-circle.red::before { color: #e06b7d; font-weight:700}
+        .progress-circle.terques::before { color: #4CC5CD; font-weight:700}
+        .progress-circle.green::before { color: #96be4b; font-weight:700}
+        .progress-circle.purple::before { color: #cba4db; font-weight:700}
+
+        /* Notification Styles */
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: flex-start;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        body.dark-mode .notification-item {
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        body.dark-mode .notification-item:hover {
+            background-color: #0f3460;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.red {
+            background-color: #ffe5e9;
+            color: #e06b7d;
+        }
+
+        .notification-icon.blue {
+            background-color: #e3f5f6;
+            color: #4CC5CD;
+        }
+
+        .notification-icon.green {
+            background-color: #e8f5d8;
+            color: #97be4b;
+        }
+
+        .notification-icon.purple {
+            background-color: #f3e8f7;
+            color: #caa3da;
+        }
+
+        .notification-icon.orange {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+
+        body.dark-mode .notification-icon.red {
+            background-color: #4a1f2a;
+        }
+
+        body.dark-mode .notification-icon.blue {
+            background-color: #1a3a3e;
+        }
+
+        body.dark-mode .notification-icon.green {
+            background-color: #2a3a1f;
+        }
+
+        body.dark-mode .notification-icon.purple {
+            background-color: #3a2a3e;
+        }
+
+        body.dark-mode .notification-icon.orange {
+            background-color: #3a2a1f;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        body.dark-mode .notification-title {
+            color: #e0e0e0;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        body.dark-mode .notification-message {
+            color: #b0b0b0;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 11px;
+        }
+
+        body.dark-mode .notification-time {
+            color: #777;
+        }
+
+        .notification-badge {
+            background-color: #e06b7d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-left: 10px;
+        }
+        /* Fee Summary Styles */
+        .fee-summary-card {
+            background: linear-gradient(135deg, #08345c 0%, #0a4a7d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .fee-summary-card {
+            background: linear-gradient(135deg, #0f3460 0%, #1a4d7d 100%);
+        }
+
+        .fee-summary-card h3 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        .fee-amount-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .fee-amount-row.total {
+            border-top: 2px solid rgba(255,255,255,0.3);
+            padding-top: 15px;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .fee-details-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .fee-details-panel {
+            background: #16213e;
+        }
+
+        .fee-details-panel h4 {
+            margin: 0 0 20px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #08345c;
+            border-bottom: 2px solid #08345c;
+            padding-bottom: 10px;
+        }
+
+        body.dark-mode .fee-details-panel h4 {
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .payment-schedule-table {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .payment-schedule-table th {
+            background: #f5f5f5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        body.dark-mode .payment-schedule-table th {
+            background: #0f3460;
+            color: #e0e0e0;
+        }
+
+        .payment-schedule-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        body.dark-mode .payment-schedule-table td {
+            border-bottom: 1px solid #2a2a3e;
+            color: #b0b0b0;
+        }
+
+        .payment-schedule-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-badge.paid {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        body.dark-mode .status-badge.paid {
+            background: #1b4d1f;
+            color: #81c784;
+        }
+
+        body.dark-mode .status-badge.pending {
+            background: #4d3319;
+            color: #ffb74d;
+        }
+
+        .payment-actions {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        body.dark-mode .payment-actions {
+            border-top: 1px solid #2a2a3e;
+        }
+
+        .btn-pay {
+            background-color: #ffd700;
+            color: #08345c;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: not-allowed;
+            opacity: 0.6;
+            margin-right: 10px;
+        }
+
+        .btn-download {
+            background-color: #08345c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-download:hover {
+            background-color: #0a4a7d;
+        }
+
+        body.dark-mode .btn-download {
+            background-color: #ffd700;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .btn-download:hover {
+            background-color: #e6c200;
+        }
+
+        .payment-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        body.dark-mode .payment-notice {
+            background: #4d3819;
+            border-left: 4px solid #ffd700;
+            color: #ffb74d;
+        }
+
+        .payment-notice i {
+            margin-right: 10px;
+        }
+
+        .fee-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .fee-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #08345c;
+        }
+
+        body.dark-mode .fee-item {
+            background: #0f3460;
+            border-left: 4px solid #ffd700;
+        }
+
+        .fee-item-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .fee-item-label {
+            color: #999;
+        }
+
+        .fee-item-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #08345c;
+        }
+
+        body.dark-mode .fee-item-amount {
+            color: #ffd700;
+        }
+
+        .bio-row span {
+            font-weight: 700;
+            color: #333;
+        }
+
+
+        .view-selector {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .bio-row {
+                width: 100%;
+            }
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Open Sans:wght@400;600;700&display=swap');
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Settings Overlay */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .settings-overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settings-overlay"></div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h2><i class="fa fa-cog"></i> Settings</h2>
+            <button class="close-settings" id="close-settings">&times;</button>
+        </div>
+        <div class="settings-content">
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Dark Mode</div>
+                    <div class="setting-description">Enable dark theme for better viewing at night</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Notifications</div>
+                    <div class="setting-description">Receive email notifications for updates</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifications-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Auto-Save</div>
+                    <div class="setting-description">Automatically save your work</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autosave-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header">
+        <a href="index.html">
+            <img src="myACC.png" alt="ACC Logo" class="logo" style="margin-left: 60px;">
+        </a>
+        <div class="header-actions">
+            <a href="myACC.php" class="logout-btn">Logout</a>
+            <button id="settings-btn" title="Settings">
+                <img src="settings-button.png" alt="Settings" width="120" height="120" />
+            </button>
+        </div>
+        <div class="menu-icon" id="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="profile-nav">
+                    <div class="panel">
+                        <div class="user-heading round">
+                            <a href="#">
+                                <img src="hi.png" alt="Earl Sta. Maria">
+                            </a>
+                            <h1>Earl Sta. Maria</h1>
+                            <p>ebstamaria@asianos.edu.ph</p>
+                        </div>
+                        <ul>
+                            <li id="profile-link" class="active">
+                                <a href="#" onclick="showView('profile')"><i class="fa fa-user"></i> Profile</a>
+                            </li>
+                            <li id="activity-link">
+                                <a href="#" onclick="showView('activity')">
+                                    <i class="fa fa-calendar"></i> Recent Activity 
+                                    <span class="label label-warning pull-right">9</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-edit"></i> Edit profile</a>
+                            </li>
+                            <li id="fees-link">
+                                <a href="#" onclick="showView('fees')">
+                                    <i class="fa fa-credit-card"></i> View & Pay Fees
+                                    <span class="label label-warning pull-right">2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                <!-- Profile View -->
+                <div id="profile-view" class="view-selector" style="display: block;">
+                    <div class="profile-info">
+                        <div class="panel">
+                            <div class="bio-graph-heading">
+                                Hello Earl! You currently have 9 new notifications.
+                            </div>
+                            <div class="panel-body bio-graph-info">
+                                <h1>Student Information</h1>
+                                <div class="row">
+                                    <div class="bio-row">
+                                        <p><span>First Name</span>: Earl Bryant</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Last Name</span>: Sta. Maria</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Grade</span>: 10th Grade</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Birthday</span>: 29 June 2010</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Section</span>: Mavericks</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Email</span>: ebstamaria@asianos.edu.ph</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Student No.</span>: 403321110515</p>
+                                    </div>
+                                    <div class="bio-row">
+                                        <p><span>Phone No.</span>: (+63) 961 320 3025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-body clearfix">
+                                        <div class="bio-chart">
+                                            <div class="progress-circle red" data-progress="6"></div>
+                                        </div>
+                                        <div class="bio-desk">
+                                            <h4 class="red"><i>Scholastic</i></h4>
+                                            <p>Notice! You currently have 6 assigned books in Scholastic.</p>
+                                            <p>- The Wind in the Willows <br><a href="#">see more..</a></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-body clearfix">
+                                        <div class="bio-chart">
+                                            <div class="progress-circle terques" data-progress="20"></div>
+                                        </div>
+                                        <div class="bio-desk">
+                                            <h4 class="terques"><i>Quipper</i></h4>
+                                            <p>Notice! You currently have 19 missing tasks in Quipper.</p>
+                                            <p>You have 1 assigned task. <br><a href="#">see more..</a></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-body clearfix">
+                                        <div class="bio-chart">
+                                            <div class="progress-circle green" data-progress="6"></div>
+                                        </div>
+                                        <div class="bio-desk">
+                                            <h4 class="green"><i>PeTas</i></h4>
+                                            <p>Notice! You currently have 5 PeTas.</p>
+                                            <p>AP: 'Call to Action'; 'LGBTQ+ Perso..' <br>Math: 'Designing with Circles: Math..'</br><a href="#">see more..</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-body clearfix">
+                                        <div class="bio-chart">
+                                            <div class="progress-circle purple" data-progress="6"></div>
+                                        </div>
+                                        <div class="bio-desk">
+                                            <h4 class="purple"><i>Tasks</i></h4>
+                                            <p>Notice! You currently have 6 tasks.</p>
+                                            <p>You have 2 missing tasks. <br></br><a href="#">see more..</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity View -->
+                <div id="activity-view" class="view-selector" style="display: none;">
+                    <div class="profile-info">
+                        <div class="panel">
+                            <div class="bio-graph-heading">
+                                Recent Activity & Notifications
+                            </div>
+                            <div class="panel-body" style="padding: 0;">
+                                <div class="notification-item">
+                                    <div class="notification-icon blue">
+                                        <i class="fa fa-book"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">New Quipper Assignment</div>
+                                        <div class="notification-message">Mathematics: Module 5 - Quadratic Equations has been assigned. Due date: January 20, 2026</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> 2 hours ago</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon red">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Scholastic Reading Reminder</div>
+                                        <div class="notification-message">You have 6 books pending review. Start with "The Wind in the Willows" - Chapter 3 discussion due tomorrow.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> 5 hours ago</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon green">
+                                        <i class="fa fa-check-circle"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">PeTa Submitted Successfully</div>
+                                        <div class="notification-message">Your Math PeTa "Designing with Circles" has been submitted. Teacher review pending.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Yesterday at 3:45 PM</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon purple">
+                                        <i class="fa fa-tasks"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Task Deadline Approaching</div>
+                                        <div class="notification-message">English: Essay on "Climate Change Impact" is due in 2 days. Currently marked as incomplete.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Yesterday at 11:20 AM</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon orange">
+                                        <i class="fa fa-warning"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Missing Quipper Tasks Alert</div>
+                                        <div class="notification-message">You have 19 overdue tasks in Quipper. Please complete them as soon as possible to avoid grade penalties.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Jan 11, 2026</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon green">
+                                        <i class="fa fa-file-text"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">New PeTa Assignment</div>
+                                        <div class="notification-message">AP: "Call to Action - Social Issues" PeTa has been assigned. Submission deadline: January 25, 2026</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Jan 10, 2026</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon blue">
+                                        <i class="fa fa-comments"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Class Discussion Forum Update</div>
+                                        <div class="notification-message">New replies in "Science Fair Project Ideas" discussion. 5 classmates have responded to your proposal.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Jan 9, 2026</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon purple">
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Grade Posted</div>
+                                        <div class="notification-message">Filipino: Quarter 2 Exam results are now available. View your grade and feedback in the gradebook.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Jan 8, 2026</div>
+                                    </div>
+                                </div>
+
+                                <div class="notification-item">
+                                    <div class="notification-icon red">
+                                        <i class="fa fa-calendar-check-o"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Upcoming Event Reminder</div>
+                                        <div class="notification-message">School Science Fair presentations begin on January 18, 2026. Make sure your project is ready for display.</div>
+                                        <div class="notification-time"><i class="fa fa-clock-o"></i> Jan 7, 2026</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View & Pay Fees View -->
+                <div id="fees-view" class="view-selector" style="display: none;">
+                    <div class="profile-info">
+                        <div class="panel">
+                            <div class="bio-graph-heading">
+                                Fee Summary & Payment Schedule
+                            </div>
+                            <div class="panel-body">
+                                <div class="payment-notice">
+                                    <i class="fa fa-info-circle"></i>
+                                    <strong>Notice:</strong> Online payment is currently unavailable. Please contact the Finance Office for payment arrangements.
+                                </div>
+
+                                <!-- Fee Summary Card -->
+                                <div class="fee-summary-card">
+                                    <h3><i class="fa fa-file-text-o"></i> Total Fee Summary - S.Y. 2025-2026</h3>
+                                    <div class="fee-amount-row">
+                                        <span>Tuition Fees:</span>
+                                        <span>₱14,500.00</span>
+                                    </div>
+                                    <div class="fee-amount-row">
+                                        <span>Miscellaneous Fees:</span>
+                                        <span>₱7,000.00</span>
+                                    </div>
+                                    <div class="fee-amount-row total">
+                                        <span>Total Amount:</span>
+                                        <span>₱21,500.00</span>
+                                    </div>
+                                    <div class="fee-amount-row" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2);">
+                                        <span>Down Payment (Paid):</span>
+                                        <span>₱4,500.00</span>
+                                    </div>
+                                    <div class="fee-amount-row">
+                                        <span>Remaining Balance:</span>
+                                        <span style="color: #ffd700;">₱2,900.00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Breakdown -->
+                                <div class="fee-details-panel">
+                                    <h4><i class="fa fa-list-alt"></i> Fee Breakdown</h4>
+                                    <div class="fee-breakdown">
+                                        <div class="fee-item">
+                                            <div class="fee-item-label">Tuition Fees</div>
+                                            <div class="fee-item-amount">₱14,500</div>
+                                        </div>
+                                        <div class="fee-item">
+                                            <div class="fee-item-label">Miscellaneous Fees</div>
+                                            <div class="fee-item-amount">₱7,000</div>
+                                        </div>
+                                        <div class="fee-item">
+                                            <div class="fee-item-label">Total Amount</div>
+                                            <div class="fee-item-amount">₱21,500</div>
+                                        </div>
+                                        <div class="fee-item">
+                                            <div class="fee-item-label">Amount Paid</div>
+                                            <div class="fee-item-amount" style="color: #2e7d32;">₱18,600</div>
+                                        </div>
+                                        <div class="fee-item">
+                                            <div class="fee-item-label">Outstanding Balance</div>
+                                            <div class="fee-item-amount" style="color: #f57c00;">₱2,900</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Schedule -->
+                                <div class="fee-details-panel">
+                                    <h4><i class="fa fa-calendar"></i> Monthly Payment Schedule (10 Months)</h4>
+                                    <table class="payment-schedule-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Month</th>
+                                                <th>Due Date</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Down Payment</td>
+                                                <td>June 15, 2025</td>
+                                                <td>₱4,500.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 1</td>
+                                                <td>June 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 2</td>
+                                                <td>July 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 3</td>
+                                                <td>August 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 4</td>
+                                                <td>September 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 5</td>
+                                                <td>October 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 6</td>
+                                                <td>November 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 7</td>
+                                                <td>December 1, 2025</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Month 8</td>
+                                                <td>January 1, 2026</td>
+                                                <td>₱1,450.00</td>
+                                                <td><span class="status-badge paid"><i class="fa fa-check-circle"></i> Paid</span></td>
+                                            </tr>
+                                            <tr style="background: #fff8e1;">
+                                                <td><strong>Month 9</strong></td>
+                                                <td><strong>February 1, 2026</strong></td>
+                                                <td><strong>₱1,450.00</strong></td>
+                                                <td><span class="status-badge pending"><i class="fa fa-clock-o"></i> Pending</span></td>
+                                            </tr>
+                                            <tr style="background: #fff8e1;">
+                                                <td><strong>Month 10</strong></td>
+                                                <td><strong>March 1, 2026</strong></td>
+                                                <td><strong>₱1,450.00</strong></td>
+                                                <td><span class="status-badge pending"><i class="fa fa-clock-o"></i> Pending</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="payment-actions">
+                                        <button class="btn-pay" disabled>
+                                            <i class="fa fa-credit-card"></i> Pay Now (Unavailable)
+                                        </button>
+                                        <button class="btn-download" onclick="alert('Statement of Account will be downloaded')">
+                                            <i class="fa fa-download"></i> Download Statement
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information -->
+                                <div class="fee-details-panel">
+                                    <h4><i class="fa fa-phone"></i> Contact Front Office</h4>
+                                    <p style="margin: 0; color: #666; font-size: 13px;">
+                                        For payment concerns or inquiries, please contact:<br>
+                                        <strong style="color: #08345c;">Front Office</strong><br>
+                                        Phone: (+63) 917 819 5203<br>
+                                        Email: asiancomputercollege@asianos.edu.ph<br>
+                                        Office Hours: Monday - Friday, 7:00 AM - 5:00 PM
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const navLinks = document.getElementById('nav-links');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettings = document.getElementById('close-settings');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        // View switching function
+        function showView(view) {
+            const profileView = document.getElementById('profile-view');
+            const activityView = document.getElementById('activity-view');
+            const feesView = document.getElementById('fees-view');
+            const profileLink = document.getElementById('profile-link');
+            const activityLink = document.getElementById('activity-link');
+            const feesLink = document.getElementById('fees-link');
+
+            // Hide all views
+            profileView.style.display = 'none';
+            activityView.style.display = 'none';
+            feesView.style.display = 'none';
+
+            // Remove active class from all links
+            profileLink.classList.remove('active');
+            activityLink.classList.remove('active');
+            feesLink.classList.remove('active');
+
+            // Show selected view and activate link
+            if (view === 'profile') {
+                profileView.style.display = 'block';
+                profileLink.classList.add('active');
+            } else if (view === 'activity') {
+                activityView.style.display = 'block';
+                activityLink.classList.add('active');
+            } else if (view === 'fees') {
+                feesView.style.display = 'block';
+                feesLink.classList.add('active');
+            }
+
+            // Close mobile menu if open
+            if (window.innerWidth <= 700) {
+                navLinks.classList.remove('show');
+            }
+        }
+
+        // Make showView globally accessible
+        window.showView = showView;
+
+        // Mobile menu toggle
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 700) {
+                    navLinks.classList.remove('show');
+                }
+            });
+        });
+
+        // Settings panel toggle
+        settingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.add('open');
+            settingsOverlay.classList.add('active');
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsPanel.classList.remove('open');
+            settingsOverlay.classList.remove('active');
+        });
+
+        settingsOverlay.addEventListener('click', () => {
+            settingsPanel.classList.remove('open');
+            settingsOverlay.classList.remove('active');
+        });
+
+        // Dark mode toggle
+        darkModeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Check for saved dark mode preference
+        const darkMode = localStorage.getItem('darkMode');
+        if (darkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Close settings when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && settingsPanel.classList.contains('open')) {
+                settingsPanel.classList.remove('open');
+                settingsOverlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
